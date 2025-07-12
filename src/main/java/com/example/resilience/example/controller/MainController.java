@@ -20,4 +20,13 @@ public class MainController {
         return new ResponseEntity<>("Hello world", HttpStatus.OK);
     }
 
+    @GetMapping("/welcome")
+    public String welcomeMethod() {
+        return "welcome to demo controller";
+    }
+    @GetMapping("/hello")
+    public String helloMethod() {
+        return "Hello User";
+    }
+
 }
