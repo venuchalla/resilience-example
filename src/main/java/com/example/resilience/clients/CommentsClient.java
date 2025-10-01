@@ -11,5 +11,5 @@ import java.util.ArrayList;
 public interface CommentsClient {
 
     @GetMapping("/comments")
-    public ArrayList<Comment> getComments();
+    public ArrayList<Comment>    getComments();
 }

@@ -52,6 +52,7 @@ public class MainController {
             UserResponse userResponse = new UserResponse(authentication.getName(), token);
             return new ResponseEntity<>(userResponse, HttpStatus.OK);
         } catch (Exception e) {
+            logger.error("Exception occurred  : {}", e.getLocalizedMessage());
             throw e;
         }
 
@@ -60,11 +61,15 @@ public class MainController {
 
     @PostMapping(path = "/signup", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserRequest> signup(@RequestBody UserRequest userRq) {
+
+        if(usersRepository.findByUserName(userRq.getUsername()).isPresent()){
+            return new ResponseEntity<>(userRq,HttpStatus.OK);
+        }
         User user = new User();
         user.setUserName(userRq.getUsername());
         user.setPassword(passwordEncoder.encode(userRq.getPassword()));
         User eUser = usersRepository.save(user);
-        return new ResponseEntity<>(userRq, HttpStatus.OK);
+        return new ResponseEntity<>(userRq, HttpStatus.CREATED);
 
     }
 
