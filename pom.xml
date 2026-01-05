@@ -16,13 +16,18 @@
 	<properties>
 		<java.version>19</java.version>
 	</properties>
-	<!--<distributionManagement>
+	<distributionManagement>
 		<repository>
 			<id>github</id>
 			<name>GitHub OWNER Apache Maven Packages</name>
-			<url>https://maven.pkg.github.com/venuchalla/parent</url>
+			<url>https://maven.pkg.github.com/venuchalla/springparent</url>
 		</repository>
-	</distributionManagement>-->
+		<snapshotRepository>
+			<id>github</id>
+			<name>GitHub Packages Snapshots</name>
+			<url>https://maven.pkg.github.com/venuchalla/springparent</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<dependencies>
 		<dependency>
