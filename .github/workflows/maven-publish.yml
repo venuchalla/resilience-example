@@ -30,4 +30,4 @@ jobs:
         #run: mvn deploy --file pom.xml -s $GITHUB_WORKSPACE/.m2/settings.xml
         run: mvn clean deploy
         env:
-          GITHUB_TOKEN: ${{ github.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
