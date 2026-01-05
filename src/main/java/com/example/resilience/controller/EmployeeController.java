@@ -1,7 +1,7 @@
 package com.example.resilience.controller;
 
 
-import com.example.resilience.dto.Employee;
+import com.example.resilience.dto.EmployeeDTO;
 import com.example.resilience.dto.EmployeesResponse;
 import com.example.resilience.services.EmployeeApiService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,12 +29,21 @@ public class EmployeeController {
     private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
     @Autowired
     EmployeeApiService employeeApiService;
+
     @GetMapping("")
-    ResponseEntity<List<Employee>> getEmployees() {
+    ResponseEntity<List<EmployeeDTO>> getEmployees() {
         logger.info("getEmployees method");
         Mono<EmployeesResponse> employees = employeeApiService.getEmployees();
-        List<Employee> result = Objects.requireNonNull(employees.block()).getData();
+        //employees.s
+        List<EmployeeDTO> result = Objects.requireNonNull(employees.block()).getData();
         return new ResponseEntity<>(result, HttpStatus.OK);
 
+    }
+
+    @GetMapping("/All")
+    ResponseEntity<List<EmployeeDTO>> getEmployeesUsingRepo() {
+        logger.info("get all employees");
+        EmployeesResponse result = employeeApiService.getAllEmployees();
+        return  new ResponseEntity<>(result.getData(),HttpStatus.OK);
     }
 }

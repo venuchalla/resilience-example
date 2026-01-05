@@ -29,7 +29,7 @@ public class WebClientConfig {
     public WebClient createWebClient() {
         return WebClient.builder()
                 .uriBuilderFactory(createDefaultUriBuilderFactory())
-                .baseUrl(baseUrl)
+                //.baseUrl(baseUrl)
                 .defaultCookie("cookie-name", "cookie-value")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .filter(logRequest())

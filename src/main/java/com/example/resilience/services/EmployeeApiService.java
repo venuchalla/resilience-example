@@ -2,7 +2,10 @@ package com.example.resilience.services;
 
 
 import com.example.resilience.annotations.LogAfterMethod;
+import com.example.resilience.dto.EmployeeDTO;
 import com.example.resilience.dto.EmployeesResponse;
+import com.example.resilience.entities.Employee;
+import com.example.resilience.repository.EmployeeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +13,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 
 @Service
 public class EmployeeApiService {
 
     @Autowired
     private WebClient webClient;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(EmployeeApiService.class) ;
 
@@ -26,7 +37,8 @@ public class EmployeeApiService {
 
     @LogAfterMethod(value = "getEmployees")
     public Mono<EmployeesResponse> getEmployees() {
-        logger.info("employee service class");
+
+
         return webClient
                 .get()
                 .uri("employees")
@@ -38,5 +50,19 @@ public class EmployeeApiService {
 
     }
 
+    public EmployeesResponse getAllEmployees(){
+        List<Employee> results = employeeRepository.findAll();
+    //List<EmployeesResponse> employeesResponses = new ArrayList<>();
+       List<EmployeeDTO> employeeDTOS =  results.stream().map(e -> {
+                    EmployeeDTO emplyeeDTO = new EmployeeDTO();
+                    emplyeeDTO.setId(e.getEmployeeId());
+                    emplyeeDTO.setEmail(e.getEmail());
+                    emplyeeDTO.setFirstName(e.getFirstName());
+                    emplyeeDTO.setLastName(e.getLastName());
+                    return  emplyeeDTO;
+                }
+        ).toList();
+       return  new EmployeesResponse(employeeDTOS,"200","SUCCESS");
+    }
 
 }

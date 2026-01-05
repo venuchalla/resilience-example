@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class EmployeesResponse {
     @JsonProperty(namespace = "data")
-    private List<Employee> data;
+    private List<EmployeeDTO> data;
     @JsonProperty(namespace = "status")
    private String status;
     @JsonProperty(namespace = "message")
