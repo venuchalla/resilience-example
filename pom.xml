@@ -23,6 +23,7 @@
 			<url>https://maven.pkg.github.com/venuchalla/parent</url>
 		</repository>
 	</distributionManagement>-->
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
