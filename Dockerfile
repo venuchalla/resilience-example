@@ -1,4 +1,4 @@
-FROM openjdk:19-jdk-alpine
+FROM openjdk:21-jdk-alpine
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} resilience-example.jar
 EXPOSE 8080
