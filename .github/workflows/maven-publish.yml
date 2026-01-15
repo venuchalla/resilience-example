@@ -32,10 +32,12 @@ jobs:
 
       - name: Build Spring Boot Executable JAR
         run: mvn clean package
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build & Publish Maven Package to GitHub Packages
         #run: mvn deploy --file pom.xml -s $GITHUB_WORKSPACE/.m2/settings.xml
-        run: mvn clean deploy
+        run: mvn deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
