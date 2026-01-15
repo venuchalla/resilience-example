@@ -28,8 +28,8 @@ jobs:
           server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
          # settings-path: ${{ github.workspace }} # location for the settings.xml file
 
-      #- name: Build Spring Boot Executable JAR
-        #run: mvn clean package spring-boot:repackage
+      - name: Build Spring Boot Executable JAR
+        run: mvn clean package
 
       - name: Build & Publish Maven Package to GitHub Packages
         #run: mvn deploy --file pom.xml -s $GITHUB_WORKSPACE/.m2/settings.xml
