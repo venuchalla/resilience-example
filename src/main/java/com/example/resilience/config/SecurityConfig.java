@@ -13,6 +13,7 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,26 +37,26 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
+
+        //csrf.ignoringRequestMatchers("/h2-console/**","/signin","/","/signup" )
         http
-                .csrf(csrf ->
-                        csrf.ignoringRequestMatchers("/h2-console/**","/signin","/","/signup" ))
+                .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers ->
                         headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .authorizeHttpRequests(auth ->
                     auth
-                            .requestMatchers(
-                                    "/signin","/","/signup",
+                            .requestMatchers("/signin","/","/signup",
                                     "/swagger-ui/**",
                                     "/api-docs/**",
                                     "/swagger-resources/**",
                                     "/actuator/**",
                                     "/h2-console/**").permitAll()
-                            .requestMatchers("/employees/**","/activity/**", "/products/**").authenticated())//.hasAuthority(Role.ROLE_ADMIN.name())
+                            .requestMatchers("/employees/**","/activity/**", "/products/**","/fraud/**").authenticated())//.hasAuthority(Role.ROLE_ADMIN.name())
                             //.requestMatchers("/activity/**", "/products/**").hasAnyAuthority(Role.ROLE_USER.name())
                             //.anyRequest().authenticated())
                 .exceptionHandling(ex ->
-                        ex.authenticationEntryPoint(customAuthenticationEntryPoint)
-                                .accessDeniedHandler(accessDeniedHandler))
+                       ex.authenticationEntryPoint(customAuthenticationEntryPoint)
+                               .accessDeniedHandler(accessDeniedHandler))
                 .httpBasic(withDefaults());
         return http.build();
     }

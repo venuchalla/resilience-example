@@ -1,0 +1,21 @@
+rule "High Amount Transaction"
+when
+    $t : Transaction(amount > 10000)
+then
+    $t.setFraud(true);
+    System.out.println("Fraud detected: High amount");
+end
+rule "High Frequency Transactions"
+when
+    $t : Transaction(transactionCountLastHour > 5)
+then
+    $t.setFraud(true);
+    System.out.println("Fraud detected: Too many transactions");
+end
+rule "High Frequency Transactions"
+when
+    $t : Transaction(transactionCountLastHour > 5)
+then
+    $t.setFraud(true);
+    System.out.println("Fraud detected: Too many transactions");
+end
