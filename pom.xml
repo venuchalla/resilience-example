@@ -93,10 +93,6 @@
 			<version>10.1.0</version>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.kie</groupId>
-			<artifactId>kie-spring</artifactId>
-		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
