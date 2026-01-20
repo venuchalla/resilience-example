@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
 import jakarta.servlet.FilterChain;
+import lombok.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ public class ActivityController {
     private final Logger logger = LoggerFactory.getLogger(ActivityController.class);
     @Autowired
     BoredApiService boredApiService;
+
     @GetMapping(path = "")
     @Operation(summary = "get activity blocks")
     @ApiResponses({@ApiResponse(responseCode = "200", description = "SUCCESS"),
@@ -58,9 +60,11 @@ public class ActivityController {
 
     }
 
-    @GetMapping(path = "/fallback/{status}")
-    public Mono<String> getActivityFallBack(@PathVariable String status) {
+    @GetMapping(path = "/fallback")
+    public Mono<String> getActivityFallBack() {
+        String status = "success";
         logger.info("path variable : {}", status);
+
         return boredApiService.getActivityFallBack(status);
         // return new ResponseEntity<>(result, HttpStatusCode.valueOf(200));
 

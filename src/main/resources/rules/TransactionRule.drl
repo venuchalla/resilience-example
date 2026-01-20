@@ -1,21 +1,24 @@
-rule "High Amount Transaction"
+package rules
+import com.example.resilience.dto.Transaction
+
+rule "High Amount fraud"
 when
     $t : Transaction(amount > 10000)
 then
     $t.setFraud(true);
     System.out.println("Fraud detected: High amount");
 end
-rule "High Frequency Transactions"
+rule "velocity fraud"
 when
     $t : Transaction(transactionCountLastHour > 5)
 then
     $t.setFraud(true);
     System.out.println("Fraud detected: Too many transactions");
 end
-rule "High Frequency Transactions"
+rule "location fraud rule"
 when
-    $t : Transaction(transactionCountLastHour > 5)
+    $t : Transaction(country in ("NG", "RU", "IR", "KP"))
 then
     $t.setFraud(true);
-    System.out.println("Fraud detected: Too many transactions");
+    System.out.println("Fraud detected: High risk country " + $t.getCountry());
 end

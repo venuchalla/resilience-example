@@ -27,12 +27,12 @@ public class User implements UserDetails {
     private String password;
     private String email;
 
-  //  @Enumerated(EnumType.STRING)
-  //  private Role role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("role"));
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override

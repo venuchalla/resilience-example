@@ -1,7 +1,9 @@
 package com.example.resilience.controller;
 
+import com.example.resilience.dto.UserJwtResponse;
 import com.example.resilience.dto.UserRequest;
 import com.example.resilience.dto.UserResponse;
+import com.example.resilience.entities.Role;
 import com.example.resilience.entities.User;
 import com.example.resilience.repository.UsersRepository;
 import com.example.resilience.util.JwtUtil;
@@ -18,6 +20,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @Tags(value = {
@@ -41,16 +45,22 @@ public class MainController {
 
         return new ResponseEntity<>("Hello world", HttpStatus.OK);
     }
+    @GetMapping(path = "/hello/{status}", produces = MediaType.ALL_VALUE)
+    public ResponseEntity<String> HelloStatus( @PathVariable String status) {
+
+        return new ResponseEntity<>("Hello world"+ status, HttpStatus.OK);
+    }
+
 
     @PostMapping(path = "/signin", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserResponse> authenticate(@RequestBody UserRequest user) {
+    public ResponseEntity<UserJwtResponse> authenticate(@RequestBody UserRequest user) {
         try {
             Authentication authentication = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
             logger.info("authentication : {} password : {}", authentication.isAuthenticated(), authentication.getPrincipal());
             String token = jwtUtil.generateToken(authentication.getName());
-            UserResponse userResponse = new UserResponse(authentication.getName(), token);
-            return new ResponseEntity<>(userResponse, HttpStatus.OK);
+            UserJwtResponse userJwtResponse = new UserJwtResponse(authentication.getName(), token);
+            return new ResponseEntity<>(userJwtResponse , HttpStatus.OK);
         } catch (Exception e) {
             logger.error("Exception occurred  : {}", e.getLocalizedMessage());
             throw e;
@@ -60,16 +70,21 @@ public class MainController {
     }
 
     @PostMapping(path = "/signup", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserRequest> signup(@RequestBody UserRequest userRq) {
-
-        if(usersRepository.findByUserName(userRq.getUsername()).isPresent()){
-            return new ResponseEntity<>(userRq,HttpStatus.OK);
+    public ResponseEntity<UserResponse> signup(@RequestBody UserRequest userRq) {
+        Optional<User> eUser = usersRepository.findByUserName(userRq.getUsername());
+        if(eUser.isPresent()){
+            User user = eUser.get();
+            UserResponse userResponse = new UserResponse(user.getUsername(),user.getRole().name());
+            return new ResponseEntity<>(userResponse,HttpStatus.OK);
         }
         User user = new User();
         user.setUserName(userRq.getUsername());
         user.setPassword(passwordEncoder.encode(userRq.getPassword()));
-        User eUser = usersRepository.save(user);
-        return new ResponseEntity<>(userRq, HttpStatus.CREATED);
+        Role role = "admin".equals(userRq.getUsername()) ? Role.ROLE_ADMIN : Role.ROLE_USER;
+        user.setRole(role);
+        User nUser = usersRepository.save(user);
+        UserResponse userResponse = new UserResponse(nUser.getUsername(),user.getRole().name());
+        return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
 
     }
 
