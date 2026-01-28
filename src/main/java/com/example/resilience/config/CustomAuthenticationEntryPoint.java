@@ -23,7 +23,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
                          HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
 
-        log.info("httpRequest : {}", request);
+        log.info("httpRequest : {}", request.getRequestURI());
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
         List<String> errors = new ArrayList<>();

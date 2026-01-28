@@ -25,9 +25,9 @@ public class RqAndRsLogger implements Filter {
 
         ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper((HttpServletRequest) servletRequest);
         ContentCachingResponseWrapper wrappedResponse = new ContentCachingResponseWrapper((HttpServletResponse) servletResponse);
-        if (wrappedRequest.getRequestURI().startsWith("/codedemo/actuator") ||
-                wrappedRequest.getRequestURI().startsWith("/codedemo/swagger") ||
-                wrappedRequest.getRequestURI().startsWith("/codedemo/api-docs")) {
+        if (wrappedRequest.getRequestURI().contains("actuator") ||
+                wrappedRequest.getRequestURI().contains("swagger") ||
+                wrappedRequest.getRequestURI().contains("api-docs")) {
             ///codedemo/api-docs
             filterChain.doFilter(servletRequest, servletResponse); return;
         }

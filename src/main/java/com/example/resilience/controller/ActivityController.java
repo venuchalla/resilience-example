@@ -3,7 +3,12 @@ package com.example.resilience.controller;
 import com.example.resilience.dto.ApiError;
 import com.example.resilience.services.BoredApiService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,6 +40,15 @@ public class ActivityController {
 
     @GetMapping(path = "")
     @Operation(summary = "get activity blocks")
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "Authorization",
+                    value = "Bearer JWT token",
+                    required = true,
+                    dataType = "string",
+                    paramType = "header"
+            )
+    })
     @ApiResponses({@ApiResponse(responseCode = "200", description = "SUCCESS"),
             @ApiResponse(responseCode = "500", content = @Content(
                     schema = @Schema(implementation = ApiError.class)
@@ -52,7 +66,10 @@ public class ActivityController {
             @ApiResponse(responseCode = "500", content = @Content(
                     schema = @Schema(implementation = ApiError.class)
             ), useReturnTypeSchema = true)
-    })
+
+    },parameters = {@Parameter( name = "Authorization",in = ParameterIn.HEADER,
+            example = "Bearer JWT token",
+            required = true)})
     public ResponseEntity<String> getActivityByType(@PathVariable String type) {
         logger.info("path variable : {}", type);
         String result = boredApiService.getActivityByType(type).block();
@@ -61,6 +78,15 @@ public class ActivityController {
     }
 
     @GetMapping(path = "/fallback")
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "Authorization",
+                    value = "Bearer JWT token",
+                    required = true,
+                    dataType = "string",
+                    paramType = "header"
+            )
+    })
     public Mono<String> getActivityFallBack() {
         String status = "success";
         logger.info("path variable : {}", status);

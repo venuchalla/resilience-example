@@ -2,6 +2,8 @@ package com.example.resilience.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 @AllArgsConstructor
@@ -9,6 +11,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @ToString
+@Schema(name = "Employee")
 public class EmployeeDTO {
     @JsonProperty(namespace = "id")
     private long id;
