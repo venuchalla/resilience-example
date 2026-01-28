@@ -22,6 +22,7 @@ public class ReadDataFromUrl {
 
     public void executorExample(){
         ExecutorService executorService = Executors.newFixedThreadPool(5);
+
     }
 
     public static void main(String[] args) {
@@ -48,7 +49,7 @@ public class ReadDataFromUrl {
             //.forEach(System.out::println);
             System.out.println(result);
         } catch (Exception e) {
-            System.out.println("e" + e.getLocalizedMessage());
+            System.out.println("e : " + e.getLocalizedMessage());
         }
 
     }
@@ -65,8 +66,8 @@ public class ReadDataFromUrl {
                 stringBuilder.append(s);
             }
             ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, String> outPutMap = objectMapper.readValue(stringBuilder.toString(), Map.class);
-            String dataString = outPutMap.get("data");
+            Map outPutMap = objectMapper.readValue(stringBuilder.toString(), Map.class);
+            String dataString = (String) outPutMap.get("data") ;
             //"key=IAfpK, age=58, key=WNVdi, age=64, key=jp9zt, age=47";
             String[] strings = dataString.split(", ");
             //Arrays.stream(strings).forEach(s -> System.out.println(s));

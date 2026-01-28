@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -25,7 +26,18 @@ public class CustomExceptionHandler   {
         List<String> errors = new ArrayList<>();
         String error = "No handler found for " +webRequest.getDescription(false);
         errors.add(error);
-        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage(), errors);
+        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND.value(), ex.getMessage(), errors);
+        return new ResponseEntity<>(apiError, HttpStatusCode.valueOf(HttpStatus.OK.value()));
+    }
+
+    @ExceptionHandler({ResponseStatusException.class})
+    ResponseEntity<ApiError> ResponseStatusExceptionHandler(ResponseStatusException responseStatusException, WebRequest webRequest) {
+        logger.info("exception handler : "+ responseStatusException.getMessage());
+        List<String> errors = new ArrayList<>();
+        String error = "Error Occurred for " +webRequest.getDescription(false);
+        errors.add(error);
+
+        ApiError apiError = new ApiError(responseStatusException.getStatusCode().value(), responseStatusException.getReason(), errors);
         return new ResponseEntity<>(apiError, HttpStatusCode.valueOf(HttpStatus.OK.value()));
     }
 
@@ -35,7 +47,7 @@ public class CustomExceptionHandler   {
         List<String> errors = new ArrayList<>();
         String error = "Error Occurred for " +webRequest.getDescription(false);
         errors.add(error);
-        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), errors);
+        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage(), errors);
         return new ResponseEntity<>(apiError, HttpStatusCode.valueOf(HttpStatus.OK.value()));
     }
 }

@@ -6,6 +6,7 @@ import com.example.resilience.dto.UserResponse;
 import com.example.resilience.entities.Role;
 import com.example.resilience.entities.User;
 import com.example.resilience.repository.UsersRepository;
+import com.example.resilience.services.PaymentService;
 import com.example.resilience.util.JwtUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
@@ -20,7 +21,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -32,12 +35,17 @@ public class MainController {
     @Autowired
     AuthenticationManager authenticationManager;
 
+
     @Autowired
     UsersRepository usersRepository;
+
     @Autowired
     JwtUtil jwtUtil;
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    PaymentService paymentService;
     private final Logger logger = LoggerFactory.getLogger(MainController.class);
 
     @GetMapping(path = "", produces = MediaType.ALL_VALUE)
@@ -47,8 +55,10 @@ public class MainController {
     }
     @GetMapping(path = "/hello/{status}", produces = MediaType.ALL_VALUE)
     public ResponseEntity<String> HelloStatus( @PathVariable String status) {
-
-        return new ResponseEntity<>("Hello world"+ status, HttpStatus.OK);
+        if(Objects.equals(status, "404")){
+       throw new ResponseStatusException(HttpStatus.NOT_FOUND,"user not found");
+        }
+        return new ResponseEntity<>("Hello world  status : "+ status, HttpStatus.OK);
     }
 
 
@@ -88,5 +98,10 @@ public class MainController {
 
     }
 
+    @GetMapping(path = "/hello/id")
+public ResponseEntity<String> paymentServiceTest(){
+       String s = paymentService.paymentService();
+       return  new ResponseEntity<>(s,HttpStatus.OK);
+    }
 
 }
