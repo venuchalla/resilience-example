@@ -38,7 +38,7 @@ public class RqAndRsLogger implements Filter {
         } finally {
             String body = new String(wrappedRequest.getContentAsByteArray(), StandardCharsets.UTF_8);
             String rbody = new String(wrappedResponse.getContentAsByteArray(), StandardCharsets.UTF_8);
-            logger.info("Request uri : "+ wrappedRequest.getRequestURI());
+            logger.info("Request uri : {} , trace id {}", wrappedRequest.getRequestURI(),MDC.get(TRACE_ID));
             //logger.info("Request message :"+body);
             //logger.info("response :"+rbody);
             wrappedResponse.copyBodyToResponse(); // required
