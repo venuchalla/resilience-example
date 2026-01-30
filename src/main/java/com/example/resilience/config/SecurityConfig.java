@@ -65,7 +65,8 @@ public class SecurityConfig {
                             .requestMatchers("/activity/**", "/products/**").hasAnyAuthority(Role.ROLE_USER.name(),Role.ROLE_ADMIN.name())
                             .anyRequest().authenticated())
                 .exceptionHandling(ex ->
-                       ex.authenticationEntryPoint(customAuthenticationEntryPoint)
+                        //customAuthenticationEntryPoint,accessDeniedHandler
+                                 ex.authenticationEntryPoint(customAuthenticationEntryPoint)
                                .accessDeniedHandler(accessDeniedHandler))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
               //  .httpBasic(withDefaults());
