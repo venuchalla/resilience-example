@@ -4,11 +4,14 @@ package com.example.resilience.services;
 import com.example.resilience.annotations.LogAfterMethod;
 import com.example.resilience.dto.EmployeeDTO;
 import com.example.resilience.dto.EmployeesResponse;
+import com.example.resilience.dto.PageResponse;
 import com.example.resilience.entities.Employee;
 import com.example.resilience.repository.EmployeeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -65,4 +68,22 @@ public class EmployeeApiService {
        return  new EmployeesResponse(employeeDTOS,"200","SUCCESS");
     }
 
+    public PageResponse<EmployeeDTO> getAllEmployeesUsingPageable(Pageable pageable){
+
+        Page<Employee> pageData =  employeeRepository.findAll(pageable);
+
+        List<EmployeeDTO> dtos = pageData.getContent()
+                .stream()
+                .map(e -> {
+                    EmployeeDTO emplyeeDTO = new EmployeeDTO();
+                    emplyeeDTO.setId(e.getEmployeeId());
+                    emplyeeDTO.setEmail(e.getEmail());
+                    emplyeeDTO.setFirstName(e.getFirstName());
+                    emplyeeDTO.setLastName(e.getLastName());
+                    return  emplyeeDTO;
+                }).toList();
+
+        return new PageResponse<>(dtos,pageData.getTotalElements(),
+                pageData.getTotalPages(), pageData.getNumber(),pageData.getSize());
+    }
 }
