@@ -23,8 +23,11 @@ public class EmployeeDTO {
     private String employee_age;
     @JsonProperty(namespace = "profile_image")
     private String profile_image;
+    @JsonProperty(namespace = "email")
     private String email;
+    @JsonProperty(namespace = "firstName")
     private String firstName;
+    @JsonProperty(namespace = "lastName")
     private String lastName;
 
 }

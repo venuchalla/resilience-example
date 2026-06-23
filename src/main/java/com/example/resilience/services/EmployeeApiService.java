@@ -6,7 +6,10 @@ import com.example.resilience.dto.EmployeeDTO;
 import com.example.resilience.dto.EmployeesResponse;
 import com.example.resilience.dto.PageResponse;
 import com.example.resilience.entities.Employee;
+import com.example.resilience.mapper.EmployeeMapper;
 import com.example.resilience.repository.EmployeeRepository;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +33,8 @@ public class EmployeeApiService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    EmployeeMapper employeeMapper = Mappers.getMapper(EmployeeMapper.class);
 
     private static final Logger logger = LoggerFactory.getLogger(EmployeeApiService.class) ;
 
@@ -85,5 +90,18 @@ public class EmployeeApiService {
 
         return new PageResponse<>(dtos,pageData.getTotalElements(),
                 pageData.getTotalPages(), pageData.getNumber(),pageData.getSize());
+    }
+
+
+    public List<EmployeeDTO> saveEmployees(List<EmployeeDTO> employeeDTOS){
+        List<Employee> employees = employeeMapper.toEntities(employeeDTOS);
+        employeeRepository.saveAll(employees);
+        return  employeeDTOS;
+    }
+
+    public EmployeeDTO saveEmployee(EmployeeDTO employeeDTO){
+        Employee employee = employeeMapper.toEntity(employeeDTO);
+        employeeRepository.save(employee);
+        return  employeeDTO;
     }
 }

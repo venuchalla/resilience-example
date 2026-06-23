@@ -5,11 +5,16 @@ import com.example.resilience.entities.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee,Long> {
 
     Optional<Employee> findByFirstName(String userName);
+
+  //  List<Employee> saveAll(List<Employee> employeeList);
+
+    //Employee save(Employee e);
 
 }

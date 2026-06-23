@@ -15,12 +15,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
@@ -65,5 +63,12 @@ public class EmployeeController {
         Pageable pageable = PageRequest.of(pageNumber,size, sortObject);
         PageResponse<EmployeeDTO> response = employeeApiService.getAllEmployeesUsingPageable(pageable);
         return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/createEmployee",produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<EmployeeDTO> createEmployee(@RequestBody EmployeeDTO employeeDTO){
+        EmployeeDTO e= employeeApiService.saveEmployee(employeeDTO);
+        return  new ResponseEntity<>(e, HttpStatus.OK);
+
     }
 }
