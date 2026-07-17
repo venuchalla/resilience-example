@@ -10,25 +10,25 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class FraudDetectionService {
 
-    private final KieContainer kieContainer;
+  private final KieContainer kieContainer;
 
-    public FraudDetectionService(KieContainer kieContainer) {
-        this.kieContainer = kieContainer;
+  public FraudDetectionService(KieContainer kieContainer) {
+    this.kieContainer = kieContainer;
+  }
+
+  public Transaction evaluate(Transaction transaction) {
+    log.info("trasaction : " + transaction);
+    try {
+      KieSession kieSession = kieContainer.newKieSession("ksession-rules");
+      kieSession.insert(transaction);
+      kieSession.fireAllRules();
+
+    } catch (RuntimeException e) {
+      log.info("Runtime exception :{} ", e.getMessage());
+    } finally {
+      kieContainer.dispose();
     }
 
-    public Transaction evaluate(Transaction transaction) {
-        log.info("trasaction : " + transaction);
-        try {
-            KieSession kieSession = kieContainer.newKieSession("ksession-rules");
-            kieSession.insert(transaction);
-            kieSession.fireAllRules();
-
-        } catch (RuntimeException e) {
-            log.info("Runtime exception :{} ", e.getMessage());
-        } finally {
-            kieContainer.dispose();
-        }
-
-        return transaction;
-    }
+    return transaction;
+  }
 }

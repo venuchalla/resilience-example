@@ -10,6 +10,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PropertiesDTO {
-    String propValue;
-    String propName;
+  String propValue;
+  String propName;
 }

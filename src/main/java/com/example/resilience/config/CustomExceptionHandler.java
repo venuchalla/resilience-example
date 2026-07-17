@@ -1,6 +1,8 @@
 package com.example.resilience.config;
 
 import com.example.resilience.dto.ApiError;
+import java.util.ArrayList;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -13,41 +15,45 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @RestControllerAdvice
-public class CustomExceptionHandler   {
+public class CustomExceptionHandler {
 
-    Logger logger = LoggerFactory.getLogger(CustomExceptionHandler.class);
-    @ExceptionHandler({NoHandlerFoundException.class, NoResourceFoundException.class})
-    ResponseEntity<ApiError> handleNoHandlerFoundException(Exception ex, WebRequest webRequest) {
-        logger.info("exception handler : "+ ex.getMessage());
-        List<String> errors = new ArrayList<>();
-        String error = "No handler found for " +webRequest.getDescription(false);
-        errors.add(error);
-        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND.value(), ex.getMessage(), errors);
-        return new ResponseEntity<>(apiError, HttpStatusCode.valueOf(HttpStatus.OK.value()));
-    }
+  Logger logger = LoggerFactory.getLogger(CustomExceptionHandler.class);
 
-    @ExceptionHandler({ResponseStatusException.class})
-    ResponseEntity<ApiError> ResponseStatusExceptionHandler(ResponseStatusException responseStatusException, WebRequest webRequest) {
-        logger.info("exception handler : "+ responseStatusException.getMessage());
-        List<String> errors = new ArrayList<>();
-        String error = "Error Occurred for " +webRequest.getDescription(false);
-        errors.add(error);
+  @ExceptionHandler({NoHandlerFoundException.class, NoResourceFoundException.class})
+  ResponseEntity<ApiError> handleNoHandlerFoundException(Exception ex, WebRequest webRequest) {
+    logger.info("exception handler : " + ex.getMessage());
+    List<String> errors = new ArrayList<>();
+    String error = "No handler found for " + webRequest.getDescription(false);
+    errors.add(error);
+    ApiError apiError = new ApiError(HttpStatus.NOT_FOUND.value(), ex.getMessage(), errors);
+    return new ResponseEntity<>(apiError, HttpStatusCode.valueOf(HttpStatus.OK.value()));
+  }
 
-        ApiError apiError = new ApiError(responseStatusException.getStatusCode().value(), responseStatusException.getReason(), errors);
-        return new ResponseEntity<>(apiError, HttpStatusCode.valueOf(HttpStatus.OK.value()));
-    }
+  @ExceptionHandler({ResponseStatusException.class})
+  ResponseEntity<ApiError> ResponseStatusExceptionHandler(
+      ResponseStatusException responseStatusException, WebRequest webRequest) {
+    logger.info("exception handler : " + responseStatusException.getMessage());
+    List<String> errors = new ArrayList<>();
+    String error = "Error Occurred for " + webRequest.getDescription(false);
+    errors.add(error);
 
-    @ExceptionHandler({Exception.class})
-    ResponseEntity<ApiError> globalExceptionHandler(Exception ex, WebRequest webRequest) {
-        logger.info("exception handler : "+ ex.getMessage());
-        List<String> errors = new ArrayList<>();
-        String error = "Error Occurred for " +webRequest.getDescription(false);
-        errors.add(error);
-        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage(), errors);
-        return new ResponseEntity<>(apiError, HttpStatusCode.valueOf(HttpStatus.OK.value()));
-    }
+    ApiError apiError =
+        new ApiError(
+            responseStatusException.getStatusCode().value(),
+            responseStatusException.getReason(),
+            errors);
+    return new ResponseEntity<>(apiError, HttpStatusCode.valueOf(HttpStatus.OK.value()));
+  }
+
+  @ExceptionHandler({Exception.class})
+  ResponseEntity<ApiError> globalExceptionHandler(Exception ex, WebRequest webRequest) {
+    logger.info("exception handler : " + ex.getMessage());
+    List<String> errors = new ArrayList<>();
+    String error = "Error Occurred for " + webRequest.getDescription(false);
+    errors.add(error);
+    ApiError apiError =
+        new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage(), errors);
+    return new ResponseEntity<>(apiError, HttpStatusCode.valueOf(HttpStatus.OK.value()));
+  }
 }

@@ -1,6 +1,5 @@
 package com.example.resilience.dto;
 
-
 import lombok.*;
 
 @AllArgsConstructor
@@ -10,6 +9,6 @@ import lombok.*;
 @ToString
 public class Option {
 
-    String label;
-    String value;
+  String label;
+  String value;
 }

@@ -8,10 +8,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DroolsConfig {
 
-
-
-    @Bean
-    public KieContainer kieContainer(){
-        return KieServices.Factory.get().getKieClasspathContainer();
-    }
+  @Bean
+  public KieContainer kieContainer() {
+    return KieServices.Factory.get().getKieClasspathContainer();
+  }
 }

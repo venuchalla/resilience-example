@@ -5,10 +5,11 @@ import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerF
 import org.springframework.stereotype.Component;
 
 @Component
-public class AppServerContextPathCustomizer implements WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> {
-    @Override
-    public void customize(ConfigurableServletWebServerFactory factory) {
+public class AppServerContextPathCustomizer
+    implements WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> {
+  @Override
+  public void customize(ConfigurableServletWebServerFactory factory) {
 
-        //factory.setContextPath("/resilience");
-    }
+    // factory.setContextPath("/resilience");
+  }
 }

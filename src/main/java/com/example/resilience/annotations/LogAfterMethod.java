@@ -6,5 +6,5 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface LogAfterMethod {
-    String value() default "";
+  String value() default "";
 }

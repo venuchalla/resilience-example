@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,10 +13,12 @@ import lombok.Setter;
 @Getter
 @Table(name = "Properties")
 public class Properties {
-    String propName;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    Long propId;
-    String propValue;
-    //E propValue;
+  String propName;
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  Long propId;
+
+  String propValue;
+  // E propValue;
 }

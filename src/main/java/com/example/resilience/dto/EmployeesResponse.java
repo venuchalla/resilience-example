@@ -1,22 +1,23 @@
 package com.example.resilience.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @AllArgsConstructor
 @Getter
 @Setter
 @NoArgsConstructor
 public class EmployeesResponse {
-    @JsonProperty(namespace = "data")
-    private List<EmployeeDTO> data;
-    @JsonProperty(namespace = "status")
-   private String status;
-    @JsonProperty(namespace = "message")
-   private String message;
+  @JsonProperty(namespace = "data")
+  private List<EmployeeDTO> data;
+
+  @JsonProperty(namespace = "status")
+  private String status;
+
+  @JsonProperty(namespace = "message")
+  private String message;
 }

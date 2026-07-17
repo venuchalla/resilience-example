@@ -11,8 +11,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CommentVO {
 
-    private int postId;
-    private String name;
-    private String email;
-    private String body;
+  private int postId;
+  private String name;
+  private String email;
+  private String body;
 }

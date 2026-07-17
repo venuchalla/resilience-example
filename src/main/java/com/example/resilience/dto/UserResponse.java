@@ -1,6 +1,5 @@
 package com.example.resilience.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +10,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserResponse {
-    String userName;
-    String role;
+  String userName;
+  String role;
 }

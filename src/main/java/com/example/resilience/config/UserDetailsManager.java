@@ -12,20 +12,22 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class UserDetailsManager {
 
-    @Bean
-    public CustomUserDetailService customUserDetailService() {
-        return new CustomUserDetailService();
-    }
+  @Bean
+  public CustomUserDetailService customUserDetailService() {
+    return new CustomUserDetailService();
+  }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-    @Bean
-    public AuthenticationManager customAuthenticationManager(CustomUserDetailService customUserDetailService, PasswordEncoder passwordEncoder) {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(customUserDetailService);
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
-        return new ProviderManager(daoAuthenticationProvider);
-    }
+  @Bean
+  public AuthenticationManager customAuthenticationManager(
+      CustomUserDetailService customUserDetailService, PasswordEncoder passwordEncoder) {
+    DaoAuthenticationProvider daoAuthenticationProvider =
+        new DaoAuthenticationProvider(customUserDetailService);
+    daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+    return new ProviderManager(daoAuthenticationProvider);
+  }
 }

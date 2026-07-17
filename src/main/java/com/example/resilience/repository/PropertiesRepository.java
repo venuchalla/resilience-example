@@ -1,11 +1,10 @@
 package com.example.resilience.repository;
 
 import com.example.resilience.entities.Properties;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+public interface PropertiesRepository extends JpaRepository<Properties, Long> {
 
-public interface PropertiesRepository extends JpaRepository<Properties,Long> {
-
-    Optional<Properties> findByPropName(String propName);
+  Optional<Properties> findByPropName(String propName);
 }

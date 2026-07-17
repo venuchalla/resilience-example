@@ -2,29 +2,26 @@ package com.example.resilience.mapper;
 
 import com.example.resilience.dto.EmployeeDTO;
 import com.example.resilience.entities.Employee;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
-import java.util.List;
 
 @Mapper
 public abstract class EmployeeMapper {
 
-
-    @Mapping(source = "firstName",target = "firstName")
-    @Mapping(source = "lastName",target = "lastName")
+  @Mapping(source = "firstName", target = "firstName")
+  @Mapping(source = "lastName", target = "lastName")
   //  @Mapping(source = "id",target = "employeeId")
-    @Mapping(source = "email",target = "email")
-   public abstract Employee toEntity(EmployeeDTO employeeDTO);
+  @Mapping(source = "email", target = "email")
+  public abstract Employee toEntity(EmployeeDTO employeeDTO);
 
-   public abstract List<Employee> toEntities(List<EmployeeDTO> employeeDTOList);
+  public abstract List<Employee> toEntities(List<EmployeeDTO> employeeDTOList);
 
-    @Mapping(source = "firstName",target = "firstName")
-    @Mapping(source = "lastName",target = "lastName")
-    @Mapping(source = "employeeId",target = "id")
-    @Mapping(source = "email",target = "email")
-   public abstract  EmployeeDTO toDto(Employee e);
+  @Mapping(source = "firstName", target = "firstName")
+  @Mapping(source = "lastName", target = "lastName")
+  @Mapping(source = "employeeId", target = "id")
+  @Mapping(source = "email", target = "email")
+  public abstract EmployeeDTO toDto(Employee e);
 
-   public abstract  List<EmployeeDTO> toDtos(List<Employee> e);
+  public abstract List<EmployeeDTO> toDtos(List<Employee> e);
 }

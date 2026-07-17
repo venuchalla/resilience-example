@@ -1,6 +1,5 @@
 package com.example.resilience.services;
 
-
 import com.example.resilience.annotations.LogAfterMethod;
 import com.example.resilience.dto.EmployeeDTO;
 import com.example.resilience.dto.EmployeesResponse;
@@ -8,7 +7,7 @@ import com.example.resilience.dto.PageResponse;
 import com.example.resilience.entities.Employee;
 import com.example.resilience.mapper.EmployeeMapper;
 import com.example.resilience.repository.EmployeeRepository;
-import org.mapstruct.Mapper;
+import java.util.List;
 import org.mapstruct.factory.Mappers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,89 +18,87 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-
 @Service
 public class EmployeeApiService {
 
-    @Autowired
-    private WebClient webClient;
+  @Autowired private WebClient webClient;
 
-    @Autowired
-    private EmployeeRepository employeeRepository;
+  @Autowired private EmployeeRepository employeeRepository;
 
-    EmployeeMapper employeeMapper = Mappers.getMapper(EmployeeMapper.class);
+  EmployeeMapper employeeMapper = Mappers.getMapper(EmployeeMapper.class);
 
-    private static final Logger logger = LoggerFactory.getLogger(EmployeeApiService.class) ;
+  private static final Logger logger = LoggerFactory.getLogger(EmployeeApiService.class);
 
-    EmployeeApiService(WebClient webClient) {
-        this.webClient = webClient;
-    }
+  EmployeeApiService(WebClient webClient) {
+    this.webClient = webClient;
+  }
 
+  @LogAfterMethod(value = "getEmployees")
+  public Mono<EmployeesResponse> getEmployees() {
 
-    @LogAfterMethod(value = "getEmployees")
-    public Mono<EmployeesResponse> getEmployees() {
+    return webClient
+        .get()
+        .uri("employees")
+        .retrieve()
+        .onStatus(
+            httpStatusCode -> !httpStatusCode.is2xxSuccessful(),
+            clientResponse -> Mono.error(new Exception("EmployeeNotFound")))
+        .bodyToMono(EmployeesResponse.class)
+        .onErrorResume(Exception.class, e -> Mono.empty());
+  }
 
+  public EmployeesResponse getAllEmployees() {
+    List<Employee> results = employeeRepository.findAll();
+    // List<EmployeesResponse> employeesResponses = new ArrayList<>();
+    List<EmployeeDTO> employeeDTOS =
+        results.stream()
+            .map(
+                e -> {
+                  EmployeeDTO emplyeeDTO = new EmployeeDTO();
+                  emplyeeDTO.setId(e.getEmployeeId());
+                  emplyeeDTO.setEmail(e.getEmail());
+                  emplyeeDTO.setFirstName(e.getFirstName());
+                  emplyeeDTO.setLastName(e.getLastName());
+                  return emplyeeDTO;
+                })
+            .toList();
+    return new EmployeesResponse(employeeDTOS, "200", "SUCCESS");
+  }
 
-        return webClient
-                .get()
-                .uri("employees")
-                .retrieve()
-                .onStatus(httpStatusCode -> !httpStatusCode.is2xxSuccessful(),
-                        clientResponse -> Mono.error(new Exception("EmployeeNotFound")))
-                .bodyToMono(EmployeesResponse.class)
-                .onErrorResume(Exception.class,e -> Mono.empty());
+  public PageResponse<EmployeeDTO> getAllEmployeesUsingPageable(Pageable pageable) {
 
-    }
+    Page<Employee> pageData = employeeRepository.findAll(pageable);
 
-    public EmployeesResponse getAllEmployees(){
-        List<Employee> results = employeeRepository.findAll();
-    //List<EmployeesResponse> employeesResponses = new ArrayList<>();
-       List<EmployeeDTO> employeeDTOS =  results.stream().map(e -> {
-                    EmployeeDTO emplyeeDTO = new EmployeeDTO();
-                    emplyeeDTO.setId(e.getEmployeeId());
-                    emplyeeDTO.setEmail(e.getEmail());
-                    emplyeeDTO.setFirstName(e.getFirstName());
-                    emplyeeDTO.setLastName(e.getLastName());
-                    return  emplyeeDTO;
-                }
-        ).toList();
-       return  new EmployeesResponse(employeeDTOS,"200","SUCCESS");
-    }
+    List<EmployeeDTO> dtos =
+        pageData.getContent().stream()
+            .map(
+                e -> {
+                  EmployeeDTO emplyeeDTO = new EmployeeDTO();
+                  emplyeeDTO.setId(e.getEmployeeId());
+                  emplyeeDTO.setEmail(e.getEmail());
+                  emplyeeDTO.setFirstName(e.getFirstName());
+                  emplyeeDTO.setLastName(e.getLastName());
+                  return emplyeeDTO;
+                })
+            .toList();
 
-    public PageResponse<EmployeeDTO> getAllEmployeesUsingPageable(Pageable pageable){
+    return new PageResponse<>(
+        dtos,
+        pageData.getTotalElements(),
+        pageData.getTotalPages(),
+        pageData.getNumber(),
+        pageData.getSize());
+  }
 
-        Page<Employee> pageData =  employeeRepository.findAll(pageable);
+  public List<EmployeeDTO> saveEmployees(List<EmployeeDTO> employeeDTOS) {
+    List<Employee> employees = employeeMapper.toEntities(employeeDTOS);
+    employeeRepository.saveAll(employees);
+    return employeeDTOS;
+  }
 
-        List<EmployeeDTO> dtos = pageData.getContent()
-                .stream()
-                .map(e -> {
-                    EmployeeDTO emplyeeDTO = new EmployeeDTO();
-                    emplyeeDTO.setId(e.getEmployeeId());
-                    emplyeeDTO.setEmail(e.getEmail());
-                    emplyeeDTO.setFirstName(e.getFirstName());
-                    emplyeeDTO.setLastName(e.getLastName());
-                    return  emplyeeDTO;
-                }).toList();
-
-        return new PageResponse<>(dtos,pageData.getTotalElements(),
-                pageData.getTotalPages(), pageData.getNumber(),pageData.getSize());
-    }
-
-
-    public List<EmployeeDTO> saveEmployees(List<EmployeeDTO> employeeDTOS){
-        List<Employee> employees = employeeMapper.toEntities(employeeDTOS);
-        employeeRepository.saveAll(employees);
-        return  employeeDTOS;
-    }
-
-    public EmployeeDTO saveEmployee(EmployeeDTO employeeDTO){
-        Employee employee = employeeMapper.toEntity(employeeDTO);
-        employeeRepository.save(employee);
-        return  employeeDTO;
-    }
+  public EmployeeDTO saveEmployee(EmployeeDTO employeeDTO) {
+    Employee employee = employeeMapper.toEntity(employeeDTO);
+    employeeRepository.save(employee);
+    return employeeDTO;
+  }
 }

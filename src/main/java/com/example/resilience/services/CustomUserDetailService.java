@@ -11,14 +11,15 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class CustomUserDetailService implements UserDetailsService {
-    @Autowired
-    UsersRepository usersRepository;
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-      UserDetails userDetails = usersRepository.findByUserName(username).orElseThrow(()-> new UsernameNotFoundException(username));
-        log.info("Role : {}", userDetails.getAuthorities());
-        return  userDetails;
-    }
+  @Autowired UsersRepository usersRepository;
 
-
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    UserDetails userDetails =
+        usersRepository
+            .findByUserName(username)
+            .orElseThrow(() -> new UsernameNotFoundException(username));
+    log.info("Role : {}", userDetails.getAuthorities());
+    return userDetails;
+  }
 }
