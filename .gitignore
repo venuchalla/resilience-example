@@ -36,3 +36,4 @@ build/
 logs/
 README.md
 generated-source
+.m2
