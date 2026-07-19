@@ -37,7 +37,7 @@ jobs:
 
       - name: Build & Publish Maven Package to GitHub Packages
         #run: mvn deploy --file pom.xml -s $GITHUB_WORKSPACE/.m2/settings.xml
-        run: mvn deploy
+        run: mvn deploy -Pgenerate-clients
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
