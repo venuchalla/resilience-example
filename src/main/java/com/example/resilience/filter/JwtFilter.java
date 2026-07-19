@@ -1,4 +1,4 @@
-package com.example.resilience.config;
+package com.example.resilience.filter;
 
 import com.example.resilience.services.CustomUserDetailService;
 import com.example.resilience.util.JwtUtil;

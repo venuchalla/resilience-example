@@ -1,7 +1,10 @@
 package com.example.resilience.aspect;
 
 import com.example.resilience.annotations.LogAfterMethod;
+import jakarta.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import lombok.CustomLog;
+import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -9,19 +12,19 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
+@CustomLog
+@RequiredArgsConstructor
 public class LoggingAspect {
 
-  Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
+  private final HttpServletRequest request;
 
   @Before("execution(* com.example.resilience.services.*.*(..))")
   public void beforeEnterService(JoinPoint joinPoint) {
-    logger.info("log before service method execution : {} ", joinPoint.getClass());
+    log.info("log before service method execution : {} ", joinPoint.getClass());
   }
 
   // @After("execution(* com.example.resilience.example.services.*.*(..))")
@@ -33,20 +36,36 @@ public class LoggingAspect {
     LogAfterMethod annotation = method.getAnnotation(LogAfterMethod.class);
     // Access the annotation value
     String value = annotation.value();
-    logger.info("After advice value passed from the annotation : {}", value);
+    log.info("After advice value passed from the annotation : {}", value);
     String methodName = joinPoint.getSignature().toShortString();
-    logger.info("After advice Executed: {} ", methodName);
+    log.info("After advice Executed: {} ", methodName);
   }
 
   @Around("execution(* com.example.resilience.services.*.*(..))")
   public Object logWhileEnterAndExistServiceMethod(ProceedingJoinPoint proceedingJoinPoint)
       throws Throwable {
-    logger.info(
+    log.info(
         "Around advice for method {} is started ",
         proceedingJoinPoint.getSignature().toShortString());
     Object result = proceedingJoinPoint.proceed();
-    logger.info(
+    log.info(
         "Around advice method {} is completed", proceedingJoinPoint.getSignature().toShortString());
     return result;
+  }
+
+  @Around("@annotation(com.example.resilience.annotations.LogRequest)")
+  public Object aroundLogReqeust(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+    MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
+    String className = signature.getDeclaringTypeName();
+    Method method = signature.getMethod();
+    // Parameter[] args= method.getParameters();
+    Object[] argValues = proceedingJoinPoint.getArgs();
+
+    log.info(
+        "class name {} Request method {} is called with arguments: {} ",
+        className,
+        method.getName(),
+        argValues);
+    return proceedingJoinPoint.proceed();
   }
 }

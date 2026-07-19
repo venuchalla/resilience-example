@@ -1,13 +1,14 @@
 package com.example.resilience.controller;
 
-import com.example.resilience.dto.EmployeeDTO;
-import com.example.resilience.dto.EmployeesResponse;
-import com.example.resilience.dto.PageResponse;
+import com.example.resilience.annotations.LogRequest;
+import com.example.resilience.dto.*;
 import com.example.resilience.services.EmployeeApiService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Objects;
+import lombok.CustomLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/employees")
 @Tags(value = {@Tag(name = "Employee Controller")})
+@CustomLog
 public class EmployeeController {
   private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
   @Autowired EmployeeApiService employeeApiService;
@@ -44,6 +46,7 @@ public class EmployeeController {
   }
 
   @GetMapping(value = " ", produces = MediaType.APPLICATION_JSON_VALUE)
+  @LogRequest
   ResponseEntity<PageResponse> getPagebleResponse(
       @RequestParam(name = "pageNumber", defaultValue = "1") int pageNumber,
       @RequestParam(name = "size", defaultValue = "5") int size,
@@ -61,8 +64,11 @@ public class EmployeeController {
       value = "/createEmployee",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  ResponseEntity<EmployeeDTO> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
-    EmployeeDTO e = employeeApiService.saveEmployee(employeeDTO);
-    return new ResponseEntity<>(e, HttpStatus.OK);
+  @LogRequest
+  ResponseEntity<ResponseWrapper<EmployeeDTO>> createEmployee(
+      @Valid @RequestBody RequestWrapper<EmployeeDTO, Void> requestWrapper) {
+    EmployeeDTO e = employeeApiService.saveEmployee(requestWrapper.request());
+    ResponseWrapper<EmployeeDTO> response = new ResponseWrapper<>(null, "abc", "1.0.0", 200, e);
+    return new ResponseEntity<>(response, HttpStatus.OK);
   }
 }

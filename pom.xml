@@ -175,30 +175,44 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>3.4.1</version>
-        <configuration>
-          <mainClass>com.example.resilience.util.CodegenTool</mainClass>
-          <arguments>
-            <argument>${project.basedir}</argument>
-            <argument>${project.basedir}/src/main/resources/swagger</argument>
-            <argument>${project.basedir}/src/main/resources/swagger/code-gen/code-gen.properties</argument>
-            <argument>${project.basedir}/src/main/resources/swagger/templates</argument>
-          </arguments>
-        </configuration>
-        <executions>
-          <execution>
-            <id>generate-clients</id>
-            <goals>
-              <goal>java</goal>
-            </goals>
-            <phase>generate-sources</phase>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <id>codegen</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.4.1</version>
+            <configuration>
+              <mainClass>com.example.resilience.util.CodegenTool</mainClass>
+              <arguments>
+                <argument>${project.basedir}</argument>
+                <argument>${project.basedir}/src/main/resources/swagger</argument>
+                <argument>${project.basedir}/src/main/resources/swagger/code-gen/code-gen.properties</argument>
+                <argument>${project.basedir}/src/main/resources/swagger/templates</argument>
+              </arguments>
+            </configuration>
+            <executions>
+              <execution>
+                <id>generate-clients</id>
+                <goals>
+                  <goal>java</goal>
+                </goals>
+                <phase>generate-sources</phase>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+
+      </build>
+    </profile>
+  </profiles>
 
 </project>

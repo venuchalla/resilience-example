@@ -1,17 +1,5 @@
 package com.example.resilience.dto;
 
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-public class ApiError {
-  private int statusCode;
-  private String message;
-  private List<String> errors;
-}
+public record ApiError(int statusCode, String message, List<String> errors) {}

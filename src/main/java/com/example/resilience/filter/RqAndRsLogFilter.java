@@ -1,4 +1,4 @@
-package com.example.resilience.config;
+package com.example.resilience.filter;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -6,17 +6,18 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.CustomLog;
 import org.slf4j.MDC;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
 @Component
-public class RqAndRsLogger implements Filter {
+@CustomLog
+@ConditionalOnProperty(name = "loggingReqAndResFilter.enabled", havingValue = "true")
+public class RqAndRsLogFilter implements Filter {
   private static final String TRACE_ID = "traceId";
-  private final Logger logger = LoggerFactory.getLogger(RqAndRsLogger.class);
 
   @Override
   public void doFilter(
@@ -41,10 +42,9 @@ public class RqAndRsLogger implements Filter {
     } finally {
       String body = new String(wrappedRequest.getContentAsByteArray(), StandardCharsets.UTF_8);
       String rbody = new String(wrappedResponse.getContentAsByteArray(), StandardCharsets.UTF_8);
-      logger.info(
-          "Request uri : {} , trace id {}", wrappedRequest.getRequestURI(), MDC.get(TRACE_ID));
-      // logger.info("Request message :"+body);
-      // logger.info("response :"+rbody);
+      log.info("Request uri : {} , trace id {}", wrappedRequest.getRequestURI(), MDC.get(TRACE_ID));
+      log.info("Request message :" + body);
+      log.info("response :" + rbody);
       wrappedResponse.copyBodyToResponse(); // required
       MDC.remove(TRACE_ID);
     }

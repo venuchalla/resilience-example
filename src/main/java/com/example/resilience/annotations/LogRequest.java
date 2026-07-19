@@ -1,6 +1,22 @@
 package com.example.resilience.annotations;
 
-import java.lang.annotation.Documented;
+import java.lang.annotation.*;
 
 @Documented
-public @interface LogRequest {}
+@Retention(RetentionPolicy.SOURCE)
+@Target(ElementType.METHOD)
+public @interface LogRequest {
+  boolean enforceRequestWrapper() default true;
+
+  boolean enforceResponseWrapper() default true;
+
+  LogLevel logParameters() default LogLevel.FULL;
+
+  LogLevel logResponse() default LogLevel.NONE;
+
+  enum LogLevel {
+    NONE,
+    FULL,
+    BRIEF
+  }
+}

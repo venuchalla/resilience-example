@@ -1,6 +1,7 @@
 package com.example.resilience.config;
 
 import com.example.resilience.entities.Role;
+import com.example.resilience.filter.JwtFilter;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
