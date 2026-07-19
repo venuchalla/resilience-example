@@ -1,10 +1,10 @@
 package com.example.resilience.services;
 
-import com.example.resilience.annotations.LogAfterMethod;
 import com.example.resilience.clients.CommentsClient;
 import com.example.resilience.dto.CommentVO;
 import com.example.resilience.mapper.CommentMapper;
 import com.example.resilience.response.Comment;
+import com.example.springutil.annotations.LogAfterMethod;
 import java.util.ArrayList;
 import java.util.List;
 import org.mapstruct.factory.Mappers;

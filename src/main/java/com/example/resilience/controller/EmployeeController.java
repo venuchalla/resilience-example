@@ -1,8 +1,12 @@
 package com.example.resilience.controller;
 
-import com.example.resilience.annotations.LogRequest;
-import com.example.resilience.dto.*;
+import com.example.resilience.dto.EmployeeDTO;
+import com.example.resilience.dto.EmployeesResponse;
+import com.example.resilience.dto.PageResponse;
 import com.example.resilience.services.EmployeeApiService;
+import com.example.springutil.annotations.LogRequest;
+import com.example.springutil.dto.RequestWrapper;
+import com.example.springutil.dto.ResponseWrapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
 import jakarta.validation.Valid;
@@ -46,7 +50,6 @@ public class EmployeeController {
   }
 
   @GetMapping(value = " ", produces = MediaType.APPLICATION_JSON_VALUE)
-  @LogRequest
   ResponseEntity<PageResponse> getPagebleResponse(
       @RequestParam(name = "pageNumber", defaultValue = "1") int pageNumber,
       @RequestParam(name = "size", defaultValue = "5") int size,

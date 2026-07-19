@@ -1,12 +1,12 @@
 package com.example.resilience.services;
 
-import com.example.resilience.annotations.LogAfterMethod;
 import com.example.resilience.dto.EmployeeDTO;
 import com.example.resilience.dto.EmployeesResponse;
 import com.example.resilience.dto.PageResponse;
 import com.example.resilience.entities.Employee;
 import com.example.resilience.mapper.EmployeeMapper;
 import com.example.resilience.repository.EmployeeRepository;
+import com.example.springutil.annotations.LogAfterMethod;
 import java.util.List;
 import org.mapstruct.factory.Mappers;
 import org.slf4j.Logger;
