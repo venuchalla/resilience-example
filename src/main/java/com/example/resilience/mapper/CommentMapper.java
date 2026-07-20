@@ -5,7 +5,7 @@ import com.example.resilience.response.Comment;
 import java.util.List;
 import org.mapstruct.Mapper;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public abstract class CommentMapper {
 
   public abstract CommentVO convertApiRsToCommentVO(Comment comment);
